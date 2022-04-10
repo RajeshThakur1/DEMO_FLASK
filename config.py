@@ -15,4 +15,7 @@ elif instance_type == "STAGE":
 elif instance_type == "DEV":
     DB_NAME = "dev_db"
 
+MONGO_DB_URL = "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
+COLLECTION_NAME = "pybron"
+
 PORT = 7000
