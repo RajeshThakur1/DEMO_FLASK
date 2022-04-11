@@ -9,8 +9,7 @@ from flask_cors import  CORS,cross_origin
 import logging
 import os
 import config as cfg
-
-
+from utilities import db_logger, all_utils
 logging.basicConfig(
     filename=os.path.join("logs", "appLogs.log"),
     level=logging.INFO,
@@ -22,6 +21,12 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 cors = CORS(app)
+
+# GET === whenever you have to fetch the data from DB
+# POST = Insert something in the DB
+# DELETE:- if we have to remove the data
+# put === if you want to update the eisting document
+
 
 @app.route('/')
 @cross_origin(origin="*")
@@ -37,6 +42,24 @@ def add():
     b = request.json['b']
     logger.info("number 2 taken")
     return jsonify(a+b)
+
+@app.route('/insert_faculty',methods=["POST"])
+@cross_origin(origin="*")
+def insert_faculty():
+    logger.info("Inserting the new faculty in pybron faculty")
+    com_name = request.json['companyName']
+    logger.info(f"company name {com_name}")
+    faculty_name = request.json['faculty_name']
+    logger.info(f"faculty name {faculty_name}")
+    specilization = request.json['specilization']
+    logger.info(f"specilization {specilization}")
+    price = request.json['price']
+    logger.info(f"price {price}")
+    obj = {"companyName": com_name, "faculty_name": faculty_name, "specilization": specilization, "price": price}
+    collection_name = cfg.COLLECTION_NAME
+    db_logger.insert_obj(obj=obj, collection_name=collection_name)
+    return jsonify(all_utils.response_format({"status_code":200,"message":"data inserted Successfully"}))
+
 
 
 if __name__=="__main__":
